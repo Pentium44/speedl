@@ -1,4 +1,5 @@
 #define BUFSIZE 4068
+#define LIST_BUFSIZE 4068
 #define INFO 1
 #define ERROR 42
 #define SORRY 43
@@ -47,4 +48,18 @@ int file_exists(char *fname) {
 
 int ends_with_slash(char *str) {
 	return (str && *str && str[strlen(str) - 1] == '/') ? 0 : 1;
+}
+
+int is_dir(char* p)
+{
+	char * stripslash;
+	struct stat st;
+	stripslash = p + 1; // strip the first forward 'slash' from the string
+	if (stat(stripslash, &st) == 0 && (st.st_mode & S_IFDIR)) {
+		return 1;
+	}
+	else if (stat(stripslash, &st) == 0 && (st.st_mode & S_IFREG)) {
+		return 2;
+	}
+	return 0;
 }

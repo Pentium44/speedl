@@ -2,7 +2,7 @@
 SpeeDL server - based from my web server chttpd
 Chris Dorman, 2014 - GPLv3
 Todo:
-    Add file lists pushing
+    Add file lists pushing - DONE!
 */
  
 #include <stdio.h>
@@ -17,7 +17,8 @@ Todo:
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <time.h>
-#include "server_config.h"
+#include <dirent.h>
+#include "server.h"
 
 void write_error(int num)
 {	
@@ -78,6 +79,7 @@ void web(int fd, int hit)
 	long i, filesize;
 	char * fstr;
 	static char buffer[BUFSIZE+1];
+	static char listbuffer[LIST_BUFSIZE*2];
 
 	// Check to see if file is corrupted
 	filesize =read(fd,buffer,BUFSIZE); 
@@ -112,6 +114,27 @@ void web(int fd, int hit)
 		write_log(SORRY,"No file to get","",fd);
 	}
 	
+	if( !strncmp(&buffer[0],"GET /list\0",6) || !strncmp(&buffer[0],"get /list\0",6) ) {
+		DIR *d = opendir(".");
+		struct dirent* dirp; // struct dirp for directory listing
+			
+		(void)sprintf(listbuffer,"HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n");
+		(void)write(fd,listbuffer,strlen(listbuffer)); // write header socket
+			
+		// Start listing files
+		while ((dirp = readdir(d)))
+		{
+			if (dirp->d_name[0] == '.')
+				continue;
+			if(is_dir(dirp->d_name) == 1) 
+				continue;
+					
+			(void)sprintf(listbuffer,"%s\n", dirp->d_name, dirp->d_name);
+			(void)write(fd,listbuffer,strlen(listbuffer));
+		}
+		exit(0);
+	}
+	
 	buflen=strlen(buffer);
 	fstr = (char *)0;
 	for(i=0;extensions[i].ext != 0;i++) {
@@ -126,6 +149,10 @@ void web(int fd, int hit)
 
 	if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) 
 		write_log(SORRY, "failed to open file",&buffer[5],fd);
+
+	if(strncmp(&buffer[5],"list",4)) {
+		
+	}
 
 	write_log(INFO,"Sending file",&buffer[5],fd);
 
