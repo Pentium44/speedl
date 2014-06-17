@@ -1,11 +1,19 @@
 CC=gcc
-FLAGS=-lcurl -I/usr/local/include -L/usr/lib
+
+# Cross compiling in Windows (CYGWIN)
+#CC=i686-pc-cygwin-gcc
+#CC=x86_64-pc-cygwin-gcc
+
+EXE_CLIENT=speedl
+EXE_SERVER=speedl-server
+
+FLAGS=-lcurl -I/usr/include -L/usr/lib
 
 all: speedl
 
 speedl: client server
-	$(CC) client.o -o speedl $(FLAGS)
-	$(CC) server.o -o speedl-server $(FLAGS)
+	$(CC) client.o -o $(EXE_CLIENT) $(FLAGS)
+	$(CC) server.o -o $(EXE_SERVER) $(FLAGS)
 	
 client:
 	$(CC) -c client.c $(FLAGS)
