@@ -8,8 +8,17 @@ Todo:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <curl/curl.h>
 #include "client_config.h"
+
+static int progress(void *p, double dltotal, double dlnow,
+              double ultotal, double ulnow)
+{
+    fflush(stdout);
+    fprintf(stderr, "Downloading: [%g / %g]\r", dlnow / 1024, dltotal / 1024);
+    return 0;
+}
 
 char* merge(char *server, char *port, char *filename)
 {
@@ -40,6 +49,8 @@ void file_get()
     FILE* file = fopen(file_name, "w");
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1);
     
     CURLcode get_method = curl_easy_perform(curl);
@@ -57,7 +68,7 @@ void file_get()
 
         get_method = curl_easy_getinfo(curl, CURLINFO_SPEED_DOWNLOAD, &val);
         if((CURLE_OK == get_method) && (val>0))
-            printf("at %0.1f Kbyte(s)/sec.\n", val / 1024);
+            printf("at %0.1f KB/s.\n", val / 1024);
  
     } else {
         fprintf(stderr, "Error while fetching '%s': %s\n",
