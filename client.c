@@ -33,6 +33,8 @@ void file_get()
 	char* file_name = file;
 	file_name = strrchr(file, '/' ) + 1;
 	
+	// notify user that file is starting
+	printf("%s is downloading from '%s'...\n", file_name, server_dest);
     CURL* curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, file);
     FILE* file = fopen(file_name, "w");
