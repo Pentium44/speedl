@@ -1,7 +1,14 @@
-#include <curl/curl.h>
+/*
+SpeeDL client
+Chris Dorman, 2014 - GPLv3
+Todo:
+    Add file list retrieving
+    refreshing download speeds.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <curl/curl.h>
 #include "client_config.h"
 
 char* merge(char *server, char *port, char *filename)

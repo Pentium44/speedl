@@ -1,5 +1,9 @@
-// CTHTTPD - Simple Web Server - GPLv2
-// Chris Dorman, 2012-2013 (cddo@riseup.net)
+/*
+SpeeDL server - based from my web server chttpd
+Chris Dorman, 2014 - GPLv3
+Todo:
+    Add file lists pushing
+*/
  
 #include <stdio.h>
 #include <stdlib.h>
@@ -167,7 +171,7 @@ int main(int argc, char **argv)
 		(void)close(i);	
 	(void)setpgrp();	
 
-	write_log(INFO,"CHTTPD server starting",argv[1],getpid());
+	write_log(INFO,"server starting",argv[1],getpid());
 
 	if((listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
 		write_log(ERROR, "system call","socket",0);
