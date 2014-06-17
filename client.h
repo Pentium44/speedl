@@ -5,4 +5,4 @@ char *buf;
 char *server;
 char *port;
 char *chk_cmd;
-const char *client_label = "SpeeDL 1.0";
+const char *client_label = "SpeeDL 1.1a";

@@ -6,7 +6,7 @@
 #define SEND_ERROR 45
 
 const char *sys_label = "Linux";
-const char *server_version = "SpeeDL 1.0";
+const char *server_version = "SpeeDL Server 1.1a";
 
 // Mimetypes
 struct {

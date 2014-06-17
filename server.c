@@ -114,7 +114,12 @@ void web(int fd, int hit)
 		write_log(SORRY,"No file to get","",fd);
 	}
 	
-	if( !strncmp(&buffer[0],"GET /list\0",6) || !strncmp(&buffer[0],"get /list\0",6) ) {
+	if( !strncmp(&buffer[0],"GET /server.log\0",16) || !strncmp(&buffer[0],"get /server.log\0",16) ) {
+		write_log(SORRY,"Requested server.log file","",fd);
+	}
+	
+	if( !strncmp(&buffer[0],"GET /list\0",10) || !strncmp(&buffer[0],"get /list\0",10) ) {
+		write_log(INFO,"requested file list",buffer,hit);
 		DIR *d = opendir(".");
 		struct dirent* dirp; // struct dirp for directory listing
 			
@@ -128,7 +133,7 @@ void web(int fd, int hit)
 				continue;
 			if(is_dir(dirp->d_name) == 1) 
 				continue;
-					
+				
 			(void)sprintf(listbuffer,"%s\n", dirp->d_name, dirp->d_name);
 			(void)write(fd,listbuffer,strlen(listbuffer));
 		}
