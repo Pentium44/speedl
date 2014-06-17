@@ -16,7 +16,7 @@ static int progress(void *p, double dltotal, double dlnow,
               double ultotal, double ulnow)
 {
     fflush(stdout);
-    fprintf(stderr, "Downloading: %0.1g / %0.1g          \r", dlnow / 1024 / 1024, dltotal / 1024 / 1024);
+    fprintf(stderr, "Downloading: %0.1g / %0.1g Megabytes          \r", dlnow / 1024 / 1024, dltotal / 1024 / 1024);
     return 0;
 }
 
