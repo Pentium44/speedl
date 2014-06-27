@@ -12,11 +12,13 @@ FLAGS=-lcurl -I/usr/include -L/usr/lib
 all: speedl
 
 speedl: client server
-	$(CC) client.o -o $(EXE_CLIENT) $(FLAGS)
+	$(CC) client.o md5.o crypto.o -o $(EXE_CLIENT) $(FLAGS)
 	$(CC) server.o -o $(EXE_SERVER) $(FLAGS)
 	
 client:
 	$(CC) -c client.c $(FLAGS)
+	$(CC) -c md5.c $(FLAGS)
+	$(CC) -c crypto.c $(FLAGS)
 	
 server:
 	$(CC) -c server.c $(FLAGS)

@@ -134,7 +134,7 @@ void web(int fd, int hit)
 			if(is_dir(dirp->d_name) == 1) 
 				continue;
 				
-			(void)sprintf(listbuffer,"%s\n", dirp->d_name, dirp->d_name);
+			(void)sprintf(listbuffer,"%s\n", dirp->d_name);
 			(void)write(fd,listbuffer,strlen(listbuffer));
 		}
 		exit(0);

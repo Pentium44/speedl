@@ -11,6 +11,7 @@ Todo:
 #include <unistd.h>
 #include <curl/curl.h>
 #include "client.h"
+#include "crypto.h"
 
 static int progress(void *p, double dltotal, double dlnow,
 			double ultotal, double ulnow)
@@ -61,7 +62,7 @@ void file_get()
 	file_name = strrchr(file, '/' ) + 1;
 	
 	// notify user that file is starting
-	printf("%s is downloading from '%s'...\n", file_name, server_dest);
+	printf("\nSpeeDL: %s is downloading from '%s'...\n", file_name, server_dest);
 	CURL* curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, file);
 	FILE* file = fopen(file_name, "w");
@@ -80,10 +81,19 @@ void file_get()
 		double val;
  		/* check for bytes downloaded */ 
 		get_method = curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD, &val);
-		if((CURLE_OK == get_method) && (val>0))
+		if((CURLE_OK == get_method) && (val>0)) {
+			if(strncmp(file_name,"list",4)) {
+				// Get file checksum
+				char *checksum = md5(file_name);
+				printf("SpeeDL: File checksum: %s\n", checksum);
+				free(checksum); // Release memory from malloc
+			}
+			
 			printf("SpeeDL: [%0.0f KB] '%s' downloaded ",val / 1024, file_name);
-
-			get_method = curl_easy_getinfo(curl, CURLINFO_SPEED_DOWNLOAD, &val);
+			
+		}
+		
+		get_method = curl_easy_getinfo(curl, CURLINFO_SPEED_DOWNLOAD, &val);
 		if((CURLE_OK == get_method) && (val>0))
 			printf("at %0.1f KB/s.\n", val / 1024);
 	} else {
